@@ -8,8 +8,8 @@ import os
 import re
 import youtube_dl
 
-urlfile = "Superstore-urls.txt"
-
+#urlfile = "Superstore-urls.txt"
+#
 # print "Setting up text file for logging urls..."
 # if not os.path.exists(urlfile):
 #     print urlfile, " doesn't exist, creating..."
@@ -18,15 +18,15 @@ urlfile = "Superstore-urls.txt"
 # else:
 #     print urlfile, " already exists."
 
-success = False
+#success = False
 
 def my_hook(d):
     if d['status'] == 'finished':
         print "Success!"
         print "Done downloading..."
         print "-------------------"
-        global success 
-        success = True
+        #global success 
+        #success = True
 
 driver = webdriver.PhantomJS(executable_path='/usr/local/bin/phantomjs')
 driver.get('http://www.nbc.com/superstore/episodes')
@@ -67,6 +67,7 @@ for show in driver.find_elements_by_css_selector('div.card__meta'):
     int_se = [int(s) for s in re.findall(r'\d+', seep.text)]
     season_int = int_se[0]
     episode_int = int_se[1]
+
     # Offset might be needed - so split out the season/episode
     # into ints so we can offset as needed.
     #print "Season: %d Episode: %d" % (season_int, episode_int)
@@ -76,7 +77,7 @@ for show in driver.find_elements_by_css_selector('div.card__meta'):
             season_int = 0
             episode_int = 1
 
-    print "## season_int = ", season_int
+    #print "## season_int = ", season_int
     parsed_seep = "S%d E%d" % (season_int, episode_int)
 
     #seasonep = re.sub(r"[Ss](\d{1}) ", "S0\\1", seep.text)
@@ -84,30 +85,30 @@ for show in driver.find_elements_by_css_selector('div.card__meta'):
     seasonep = re.sub(r"[Ee](\d{1})$", "E0\\1", seasonep)
     seasonep = seasonep.replace(" ", "")
 
-    print "title: ", title
-    print "Season/Episode: ", seasonep
-    print "season_int/episode_int: %d %d" % (season_int, episode_int)
-    print "url: ", url
+    print "------------------"
+    print "title: %s" % title
+    print "Season/Episode: %s" % seasonep
+    print "url: %s" % url
 
     filename = "Superstore - "+ seasonep +" - "+ title
-    print "filename test: %s " % filename
+    print "filename: %s " % filename
 
-    inurl = False 
+    #inurl = False 
 
-    print "## Getting ready to pass params to ydl..."
-    print "season: %d, episode: %d" % (season_int, episode_int)
+    #print "## Getting ready to pass params to ydl..."
+    #print "season: %d, episode: %d" % (season_int, episode_int)
     ydl_opts = {
             'outtmpl': "/home/pat/Downloads/complete/"+filename +".%(ext)s",
-            'download_archive': 'ydl-archive.txt',
+            'download_archive': 'ydl-archive-superstore.txt',
             'progress_hooks': [my_hook]
             }
     with youtube_dl.YoutubeDL( ydl_opts ) as ydl:
         result = ydl.extract_info( url )
-    print "Testing success..."
-    if success:
-        print "Success!"
-    else:
-        print "Uh oh. Didn't download?  Already exists?"
+#    print "Testing success..."
+#    if success:
+#        print "Success!"
+#    else:
+#        print "Uh oh. Didn't download?  Already exists?"
 
 
 #    with open(urlfile, 'a+b') as thefile:
