@@ -4,3 +4,4 @@
 # Except
 !.gitignore
 !test2.py
+!scrape-superstore.py
